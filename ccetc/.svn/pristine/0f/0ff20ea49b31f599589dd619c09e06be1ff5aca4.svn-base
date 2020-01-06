@@ -1,0 +1,82 @@
+package com.chinasofti.service.user.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.chinasofti.mapper.user.UserMapper;
+import com.chinasofti.model.user.User;
+import com.chinasofti.service.user.UserService;
+import com.chinasofti.util.Md5Util;
+import com.chinasofti.util.SessionUtil;
+
+@Service
+public class UserServiceImpl implements UserService{
+	
+	@Autowired
+	private UserMapper userMapper;
+
+	@Override
+	public User login(User user) {
+		user.setPassword(Md5Util.md5(user.getPassword()));
+		return userMapper.login(user);
+	}
+
+	@Override
+	public List<User> selectList(User user) {
+		return userMapper.selectList(user);
+	}
+
+	@Override
+	public int selectCount(User user) {
+		return userMapper.selectCount(user);
+	}
+
+	@Override
+	public User selectByPrimaryKey(String userid) {
+		return userMapper.selectByPrimaryKey(userid);
+	}
+
+	@Override
+	@Transactional
+	public int update(User user, HttpSession session) {
+		User u = userMapper.selectByPrimaryKey(user.getUserid());
+		u.setRoleid(user.getRoleid());
+		u.setStatus(user.getStatus());
+		u.setEditid(SessionUtil.userId(session));
+		u.setEditdate(new Date());
+		return userMapper.updateByPrimaryKey(u);
+	}
+
+	@Override
+	@Transactional
+	public void updateStatus(String ids, int status, HttpSession session) {
+		String[] values = ids.split(",");
+		for(String id : values) {
+			User u = userMapper.selectByPrimaryKey(id);
+			u.setStatus(status);
+			u.setEditid(SessionUtil.userId(session));
+			u.setEditdate(new Date());
+			userMapper.updateByPrimaryKey(u);
+		}
+	}
+
+	@Override
+	@Transactional
+	public void updatePwd(String ids, HttpSession session) {
+		String[] values = ids.split(",");
+		for(String id : values) {
+			User u = userMapper.selectByPrimaryKey(id);
+			u.setPassword(Md5Util.md5("1234"));
+			u.setEditid(SessionUtil.userId(session));
+			u.setEditdate(new Date());
+			userMapper.updateByPrimaryKey(u);
+		}
+	}
+
+}

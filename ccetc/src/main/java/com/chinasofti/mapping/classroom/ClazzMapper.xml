@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.mapper.classroom.ClazzMapper">
+  <resultMap id="BaseResultMap" type="com.chinasofti.model.classroom.Clazz">
+    <id column="CLAZZID" jdbcType="DECIMAL" property="clazzid" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="TECHNOLOGYID" jdbcType="VARCHAR" property="technologyid" />
+    <result column="CLASSROOMID" jdbcType="DECIMAL" property="classroomid" />
+    <result column="TIMETABLEID" jdbcType="DECIMAL" property="timetableid" />
+    <result column="COUNT" jdbcType="DECIMAL" property="count" />
+    <result column="PROPERTIES" jdbcType="CHAR" property="properties" />
+    <result column="STARTDATE" jdbcType="DATE" property="startdate" />
+    <result column="ENDDATE" jdbcType="DATE" property="enddate" />
+    <result column="TEACHER" jdbcType="VARCHAR" property="teacher" />
+    <result column="ASSISTANT" jdbcType="VARCHAR" property="assistant" />
+    <result column="CLAZZMASTER" jdbcType="VARCHAR" property="clazzmaster" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+  </resultMap>
+  <resultMap id="MyMap" type="com.chinasofti.model.classroom.Clazz">
+    <id column="CLAZZID" jdbcType="DECIMAL" property="clazzid" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="TECHNOLOGYID" jdbcType="VARCHAR" property="technologyid" />
+    <result column="CLASSROOMID" jdbcType="DECIMAL" property="classroomid" />
+    <result column="TIMETABLEID" jdbcType="DECIMAL" property="timetableid" />
+    <result column="COUNT" jdbcType="DECIMAL" property="count" />
+    <result column="PROPERTIES" jdbcType="CHAR" property="properties" />
+    <result column="STARTDATE" jdbcType="DATE" property="startdate" />
+    <result column="ENDDATE" jdbcType="DATE" property="enddate" />
+    <result column="TEACHER" jdbcType="VARCHAR" property="teacher" />
+    <result column="ASSISTANT" jdbcType="VARCHAR" property="assistant" />
+    <result column="CLAZZMASTER" jdbcType="VARCHAR" property="clazzmaster" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+    <association property="technologyname">
+			 <id column="X_TECHNOLOGYID" jdbcType="DECIMAL" property="technologyid" />
+             <result column="TECHNOLOGYNAME" jdbcType="VARCHAR" property="technologyname" />
+    </association>
+     <association property="areaname">
+			 <id column="A_AREAID" jdbcType="DECIMAL" property="areaid" />
+             <result column="AREANAME" jdbcType="VARCHAR" property="areaname" />
+    </association>
+  </resultMap>
+    <resultMap id="BMap" type="com.chinasofti.model.classroom.Clazz">
+    <id column="CLAZZID" jdbcType="DECIMAL" property="clazzid" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="TECHNOLOGYID" jdbcType="VARCHAR" property="technologyid" />
+    <result column="CLASSROOMID" jdbcType="DECIMAL" property="classroomid" />
+    <result column="TIMETABLEID" jdbcType="DECIMAL" property="timetableid" />
+    <result column="COUNT" jdbcType="DECIMAL" property="count" />
+    <result column="PROPERTIES" jdbcType="CHAR" property="properties" />
+    <result column="STARTDATE" jdbcType="DATE" property="startdate" />
+    <result column="ENDDATE" jdbcType="DATE" property="enddate" />
+    <result column="TEACHER" jdbcType="VARCHAR" property="teacher" />
+    <result column="ASSISTANT" jdbcType="VARCHAR" property="assistant" />
+    <result column="CLAZZMASTER" jdbcType="VARCHAR" property="clazzmaster" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+    <association property="areaname">
+			 <id column="A_AREAID" jdbcType="DECIMAL" property="areaid" />
+             <result column="AREANAME" jdbcType="VARCHAR" property="areaname" />
+    </association>
+     <association property="technologyname">
+			 <id column="X_TECHNOLOGYID" jdbcType="DECIMAL" property="technologyid" />
+             <result column="TECHNOLOGYNAME" jdbcType="VARCHAR" property="technologyname" />
+    </association>      
+  </resultMap>
+  <sql id="Base_Column_List">
+    CLAZZID, AREAID, TECHNOLOGYID, CLASSROOMID, TIMETABLEID, COUNT, PROPERTIES, STARTDATE, 
+    ENDDATE, TEACHER, ASSISTANT, CLAZZMASTER, REMARK, CREATEID, CREATEDATE, EDITID, EDITDATE
+  </sql>
+  
+   <select id="allclassroom"  resultMap="BMap">
+		SELECT
+		T.*,					
+		A.AREAID AS A_AREAID,
+		X.TECHNOLOGYID AS X_TECHNOLOGYID,		
+		A.AREANAME,
+		X.TECHNOLOGYNAME		
+		FROM
+		T_CLAZZ T  LEFT JOIN T_AREA A ON T.AREAID = A.AREAID		
+		LEFT JOIN T_TECHNOLOGY X ON X.TECHNOLOGYID = T.TECHNOLOGYID
+	</select>
+  <select id="selectCourse"  resultMap="MyMap">
+ SELECT
+		T.*,
+		A.AREAID AS A_AREAID,
+		X.TECHNOLOGYID AS X_TECHNOLOGYID,
+		A.AREANAME,
+		X.TECHNOLOGYNAME
+		FROM
+		(SELECT D.* FROM T_CLAZZ D
+		
+		) T LEFT JOIN T_AREA A ON T.AREAID = A.AREAID
+		LEFT JOIN T_TECHNOLOGY X ON X.TECHNOLOGYID=T.TECHNOLOGYID
+		WHERE T.TEACHER = #{createid,jdbcType=VARCHAR}
+OR T.CLAZZMASTER = #{createid,jdbcType=VARCHAR}
+OR T.ASSISTANT = #{createid,jdbcType=VARCHAR}	
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_CLAZZ
+    where CLAZZID = #{clazzid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from T_CLAZZ
+    where CLAZZID = #{clazzid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.chinasofti.model.classroom.Clazz">
+    insert into T_CLAZZ (CLAZZID, AREAID, TECHNOLOGYID, 
+      CLASSROOMID, TIMETABLEID, COUNT, 
+      PROPERTIES, STARTDATE, ENDDATE, 
+      TEACHER, ASSISTANT, CLAZZMASTER, 
+      REMARK, CREATEID, CREATEDATE, 
+      EDITID, EDITDATE)
+    values (#{clazzid,jdbcType=DECIMAL}, #{areaid,jdbcType=VARCHAR}, #{technologyid,jdbcType=VARCHAR}, 
+      #{classroomid,jdbcType=DECIMAL}, #{timetableid,jdbcType=DECIMAL}, #{count,jdbcType=DECIMAL}, 
+      #{properties,jdbcType=CHAR}, #{startdate,jdbcType=DATE}, #{enddate,jdbcType=DATE}, 
+      #{teacher,jdbcType=VARCHAR}, #{assistant,jdbcType=VARCHAR}, #{clazzmaster,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE}, 
+      #{editid,jdbcType=VARCHAR}, #{editdate,jdbcType=DATE})
+  </insert>
+   <insert id="addclazz" parameterType="com.chinasofti.model.classroom.Clazz" useGeneratedKeys="true" keyProperty="clazzid">
+   <selectKey keyProperty="clazzid" resultType="java.lang.Integer" order="BEFORE">
+			SELECT SEQ_MYCLAZZ.nextval from dual
+	</selectKey>
+    insert into T_CLAZZ (CLAZZID, AREAID, TECHNOLOGYID, 
+      CLASSROOMID, TIMETABLEID, COUNT, 
+      PROPERTIES, STARTDATE, ENDDATE, 
+      TEACHER, ASSISTANT, CLAZZMASTER,CREATEID, CREATEDATE
+     )
+    values (#{clazzid,jdbcType=DECIMAL}, #{areaid,jdbcType=VARCHAR}, #{technologyid,jdbcType=VARCHAR}, 
+      #{classroomid,jdbcType=DECIMAL}, #{timetableid,jdbcType=DECIMAL}, #{count,jdbcType=DECIMAL}, 
+      #{properties,jdbcType=CHAR}, #{startdate,jdbcType=DATE}, #{enddate,jdbcType=DATE}, 
+      #{teacher,jdbcType=VARCHAR}, #{assistant,jdbcType=VARCHAR}, #{clazzmaster,jdbcType=VARCHAR}, 
+      #{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE} 
+     )
+  </insert>
+  <insert id="insertSelective" parameterType="com.chinasofti.model.classroom.Clazz">
+    insert into T_CLAZZ
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="clazzid != null">
+        CLAZZID,
+      </if>
+      <if test="areaid != null">
+        AREAID,
+      </if>
+      <if test="technologyid != null">
+        TECHNOLOGYID,
+      </if>
+      <if test="classroomid != null">
+        CLASSROOMID,
+      </if>
+      <if test="timetableid != null">
+        TIMETABLEID,
+      </if>
+      <if test="count != null">
+        COUNT,
+      </if>
+      <if test="properties != null">
+        PROPERTIES,
+      </if>
+      <if test="startdate != null">
+        STARTDATE,
+      </if>
+      <if test="enddate != null">
+        ENDDATE,
+      </if>
+      <if test="teacher != null">
+        TEACHER,
+      </if>
+      <if test="assistant != null">
+        ASSISTANT,
+      </if>
+      <if test="clazzmaster != null">
+        CLAZZMASTER,
+      </if>
+      <if test="remark != null">
+        REMARK,
+      </if>
+      <if test="createid != null">
+        CREATEID,
+      </if>
+      <if test="createdate != null">
+        CREATEDATE,
+      </if>
+      <if test="editid != null">
+        EDITID,
+      </if>
+      <if test="editdate != null">
+        EDITDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="clazzid != null">
+        #{clazzid,jdbcType=DECIMAL},
+      </if>
+      <if test="areaid != null">
+        #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="technologyid != null">
+        #{technologyid,jdbcType=VARCHAR},
+      </if>
+      <if test="classroomid != null">
+        #{classroomid,jdbcType=DECIMAL},
+      </if>
+      <if test="timetableid != null">
+        #{timetableid,jdbcType=DECIMAL},
+      </if>
+      <if test="count != null">
+        #{count,jdbcType=DECIMAL},
+      </if>
+      <if test="properties != null">
+        #{properties,jdbcType=CHAR},
+      </if>
+      <if test="startdate != null">
+        #{startdate,jdbcType=DATE},
+      </if>
+      <if test="enddate != null">
+        #{enddate,jdbcType=DATE},
+      </if>
+      <if test="teacher != null">
+        #{teacher,jdbcType=VARCHAR},
+      </if>
+      <if test="assistant != null">
+        #{assistant,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzmaster != null">
+        #{clazzmaster,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        #{editdate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.model.classroom.Clazz">
+    update T_CLAZZ
+    <set>
+      <if test="areaid != null">
+        AREAID = #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="technologyid != null">
+        TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR},
+      </if>
+      <if test="classroomid != null">
+        CLASSROOMID = #{classroomid,jdbcType=DECIMAL},
+      </if>
+      <if test="timetableid != null">
+        TIMETABLEID = #{timetableid,jdbcType=DECIMAL},
+      </if>
+      <if test="count != null">
+        COUNT = #{count,jdbcType=DECIMAL},
+      </if>
+      <if test="properties != null">
+        PROPERTIES = #{properties,jdbcType=CHAR},
+      </if>
+      <if test="startdate != null">
+        STARTDATE = #{startdate,jdbcType=DATE},
+      </if>
+      <if test="enddate != null">
+        ENDDATE = #{enddate,jdbcType=DATE},
+      </if>
+      <if test="teacher != null">
+        TEACHER = #{teacher,jdbcType=VARCHAR},
+      </if>
+      <if test="assistant != null">
+        ASSISTANT = #{assistant,jdbcType=VARCHAR},
+      </if>
+      <if test="clazzmaster != null">
+        CLAZZMASTER = #{clazzmaster,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        CREATEID = #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        CREATEDATE = #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        EDITID = #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        EDITDATE = #{editdate,jdbcType=DATE},
+      </if>
+    </set>
+    where CLAZZID = #{clazzid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chinasofti.model.classroom.Clazz">
+    update T_CLAZZ
+    set AREAID = #{areaid,jdbcType=VARCHAR},
+      TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR},
+      CLASSROOMID = #{classroomid,jdbcType=DECIMAL},
+      TIMETABLEID = #{timetableid,jdbcType=DECIMAL},
+      COUNT = #{count,jdbcType=DECIMAL},
+      PROPERTIES = #{properties,jdbcType=CHAR},
+      STARTDATE = #{startdate,jdbcType=DATE},
+      ENDDATE = #{enddate,jdbcType=DATE},
+      TEACHER = #{teacher,jdbcType=VARCHAR},
+      ASSISTANT = #{assistant,jdbcType=VARCHAR},
+      CLAZZMASTER = #{clazzmaster,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      CREATEID = #{createid,jdbcType=VARCHAR},
+      CREATEDATE = #{createdate,jdbcType=DATE},
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where CLAZZID = #{clazzid,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.mapper.region.DutiesMapper">
+<resultMap id="BaseResultMap" type="com.chinasofti.model.region.Duties">
+    <id column="DUTIESID" jdbcType="VARCHAR" property="dutiesid" />
+    <result column="DUTIESNAME" jdbcType="VARCHAR" property="dutiesname" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="DEPTID" jdbcType="VARCHAR" property="deptid" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+    </resultMap>
+  <resultMap id="MYMap" type="com.chinasofti.model.region.Duties">
+    <id column="DUTIESID" jdbcType="VARCHAR" property="dutiesid" />
+    <result column="DUTIESNAME" jdbcType="VARCHAR" property="dutiesname" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="DEPTID" jdbcType="VARCHAR" property="deptid" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+     <association property="areaname">
+			 <id column="A_AREAID" jdbcType="DECIMAL" property="areaid" />
+             <result column="AREANAME" jdbcType="VARCHAR" property="areaname" />
+    </association>
+     <association property="deptname">
+			 <id column="P_DEPTID" jdbcType="DECIMAL" property="deptid" />
+             <result column="DEPTNAME" jdbcType="VARCHAR" property="deptname" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    DUTIESID, DUTIESNAME, AREAID, DEPTID, CREATEID, CREATEDATE, EDITID, EDITDATE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_DUTIES
+    where DUTIESID = #{dutiesid,jdbcType=VARCHAR}
+  </select>
+  <select id="childtwo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from T_DUTIES
+    where AREAID = #{areaid,jdbcType=VARCHAR}
+    and
+    DEPTID = #{deptid,jdbcType=VARCHAR}
+  </select>
+   <select id="selectAllDuties" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from T_DUTIES
+  </select>
+  
+  
+  <select id="dutiesList" resultMap="MYMap">
+		SELECT
+		T.*,
+		A.AREAID AS A_AREAID,
+		P.DEPTID AS P_DEPTID,
+		A.AREANAME,
+		P.DEPTNAME
+		FROM
+		( SELECT ROWNUM AS NUM, U.* FROM T_DUTIES U ) T  LEFT JOIN T_AREA A ON T.AREAID = A.AREAID
+		LEFT JOIN T_DEPT P ON P.DEPTID=T.DEPTID	
+		WHERE T.NUM > (#{page}-1)*#{row} and T.NUM &lt;= #{page}*#{row}	
+	</select>
+	<select id="selectCount" parameterType="com.chinasofti.model.region.Duties" resultType="java.lang.Integer" >
+		SELECT count(*) FROM  T_DUTIES 	
+	</select>
+	<select id="testdutiesname" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select *
+		from T_DUTIES 
+		where DUTIESNAME = #{dutiesname,jdbcType=VARCHAR}
+		and AREAID = #{areaid,jdbcType=VARCHAR}
+		and DEPTID = #{deptid,jdbcType=VARCHAR}
+	</select>
+	 <select id="selecteditDuties" resultMap="MYMap">
+		SELECT
+		T.*,
+		A.AREAID AS A_AREAID,
+		P.DEPTID AS P_DEPTID,
+		A.AREANAME,
+		P.DEPTNAME
+		FROM
+		(SELECT D.* FROM T_DUTIES D
+		
+		) T LEFT JOIN T_AREA A ON T.AREAID = A.AREAID
+		LEFT JOIN T_DEPT P ON P.DEPTID=T.DEPTID	
+		where T.DUTIESNAME = #{dutiesname,jdbcType=VARCHAR}
+		and T.AREAID = #{areaid,jdbcType=VARCHAR}
+		and T.DEPTID = #{deptid,jdbcType=VARCHAR}
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from T_DUTIES
+    where DUTIESID = #{dutiesid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="addduties" parameterType="com.chinasofti.model.region.Duties" useGeneratedKeys="true" keyProperty="dutiesid">
+   <selectKey keyProperty="dutiesid" resultType="java.lang.String" order="BEFORE">
+			SELECT SEQ_MYDUTIES.nextval from dual
+	</selectKey>
+    insert into T_DUTIES (DUTIESID, DUTIESNAME, AREAID, 
+      DEPTID, CREATEID, CREATEDATE)
+    values (#{dutiesid,jdbcType=DECIMAL}, #{dutiesname,jdbcType=VARCHAR}, #{areaid,jdbcType=VARCHAR}, 
+      #{deptid,jdbcType=VARCHAR}, #{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE})
+  </insert>
+  <insert id="insert" parameterType="com.chinasofti.model.region.Duties">
+    insert into T_DUTIES (DUTIESID, DUTIESNAME, AREAID, 
+      DEPTID, CREATEID, CREATEDATE, 
+      EDITID, EDITDATE)
+    values (#{dutiesid,jdbcType=VARCHAR}, #{dutiesname,jdbcType=VARCHAR}, #{areaid,jdbcType=VARCHAR}, 
+      #{deptid,jdbcType=VARCHAR}, #{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE}, 
+      #{editid,jdbcType=VARCHAR}, #{editdate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chinasofti.model.region.Duties">
+    insert into T_DUTIES
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dutiesid != null">
+        DUTIESID,
+      </if>
+      <if test="dutiesname != null">
+        DUTIESNAME,
+      </if>
+      <if test="areaid != null">
+        AREAID,
+      </if>
+      <if test="deptid != null">
+        DEPTID,
+      </if>
+      <if test="createid != null">
+        CREATEID,
+      </if>
+      <if test="createdate != null">
+        CREATEDATE,
+      </if>
+      <if test="editid != null">
+        EDITID,
+      </if>
+      <if test="editdate != null">
+        EDITDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dutiesid != null">
+        #{dutiesid,jdbcType=VARCHAR},
+      </if>
+      <if test="dutiesname != null">
+        #{dutiesname,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null">
+        #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="deptid != null">
+        #{deptid,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        #{editdate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+   <update id="editduties" parameterType="com.chinasofti.model.region.Duties">
+    update T_DUTIES
+    set DUTIESNAME = #{dutiesname,jdbcType=VARCHAR},
+      AREAID = #{areaid,jdbcType=VARCHAR},
+      DEPTID = #{deptid,jdbcType=VARCHAR},    
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where DUTIESID = #{dutiesid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.model.region.Duties">
+    update T_DUTIES
+    <set>
+      <if test="dutiesname != null">
+        DUTIESNAME = #{dutiesname,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null">
+        AREAID = #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="deptid != null">
+        DEPTID = #{deptid,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        CREATEID = #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        CREATEDATE = #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        EDITID = #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        EDITDATE = #{editdate,jdbcType=DATE},
+      </if>
+    </set>
+    where DUTIESID = #{dutiesid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chinasofti.model.region.Duties">
+    update T_DUTIES
+    set DUTIESNAME = #{dutiesname,jdbcType=VARCHAR},
+      AREAID = #{areaid,jdbcType=VARCHAR},
+      DEPTID = #{deptid,jdbcType=VARCHAR},
+      CREATEID = #{createid,jdbcType=VARCHAR},
+      CREATEDATE = #{createdate,jdbcType=DATE},
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where DUTIESID = #{dutiesid,jdbcType=VARCHAR}
+  </update>
+</mapper>

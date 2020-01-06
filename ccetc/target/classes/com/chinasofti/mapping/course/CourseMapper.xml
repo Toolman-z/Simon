@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.mapper.course.CourseMapper">
+  <resultMap id="BaseResultMap" type="com.chinasofti.model.course.Course">
+    <id column="COURSEID" jdbcType="DECIMAL" property="courseid" />
+    <result column="COURSENAME" jdbcType="VARCHAR" property="coursename" />
+    <result column="TECHNOLOGYID" jdbcType="VARCHAR" property="technologyid" />
+    <result column="FILEURL" jdbcType="VARCHAR" property="fileurl" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+     <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    COURSEID, COURSENAME, TECHNOLOGYID, FILEURL, CREATEID, CREATEDATE, EDITID, EDITDATE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_COURSE
+    where COURSEID = #{courseid,jdbcType=DECIMAL}
+  </select>
+     <select id="selectallCourse" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_COURSE
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from T_COURSE
+    where COURSEID = #{courseid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.chinasofti.model.course.Course">
+    insert into T_COURSE (COURSEID, COURSENAME, TECHNOLOGYID, 
+      FILEURL, CREATEID, CREATEDATE, 
+      EDITID, EDITDATE)
+    values (#{courseid,jdbcType=DECIMAL}, #{coursename,jdbcType=VARCHAR}, #{technologyid,jdbcType=VARCHAR}, 
+      #{fileurl,jdbcType=VARCHAR}, #{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE}, 
+      #{editid,jdbcType=VARCHAR}, #{editdate,jdbcType=DATE})
+  </insert>
+   <insert id="insertcourse" parameterType="com.chinasofti.model.course.Course" useGeneratedKeys="true" keyProperty="courseid">
+   <selectKey keyProperty="courseid" resultType="Integer" order="BEFORE">
+			SELECT SEQ_MYCOURSE.nextval from dual
+		</selectKey>
+    insert into T_COURSE (COURSEID, COURSENAME, TECHNOLOGYID, 
+     CREATEID, CREATEDATE 
+     )
+    values (#{courseid,jdbcType=DECIMAL}, #{coursename,jdbcType=VARCHAR}, #{technologyid,jdbcType=VARCHAR}, 
+       #{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chinasofti.model.course.Course">
+    insert into T_COURSE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="courseid != null">
+        COURSEID,
+      </if>
+      <if test="coursename != null">
+        COURSENAME,
+      </if>
+      <if test="technologyid != null">
+        TECHNOLOGYID,
+      </if>
+      <if test="fileurl != null">
+        FILEURL,
+      </if>
+      <if test="createid != null">
+        CREATEID,
+      </if>
+      <if test="createdate != null">
+        CREATEDATE,
+      </if>
+      <if test="editid != null">
+        EDITID,
+      </if>
+      <if test="editdate != null">
+        EDITDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="courseid != null">
+        #{courseid,jdbcType=DECIMAL},
+      </if>
+      <if test="coursename != null">
+        #{coursename,jdbcType=VARCHAR},
+      </if>
+      <if test="technologyid != null">
+        #{technologyid,jdbcType=VARCHAR},
+      </if>
+      <if test="fileurl != null">
+        #{fileurl,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        #{editdate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.model.course.Course">
+    update T_COURSE
+    <set>
+      <if test="coursename != null">
+        COURSENAME = #{coursename,jdbcType=VARCHAR},
+      </if>
+      <if test="technologyid != null">
+        TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR},
+      </if>
+      <if test="fileurl != null">
+        FILEURL = #{fileurl,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        CREATEID = #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        CREATEDATE = #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        EDITID = #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        EDITDATE = #{editdate,jdbcType=DATE},
+      </if>
+    </set>
+    where COURSEID = #{courseid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chinasofti.model.course.Course">
+    update T_COURSE
+    set COURSENAME = #{coursename,jdbcType=VARCHAR},
+      TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR},
+      FILEURL = #{fileurl,jdbcType=VARCHAR},
+      CREATEID = #{createid,jdbcType=VARCHAR},
+      CREATEDATE = #{createdate,jdbcType=DATE},
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where COURSEID = #{courseid,jdbcType=DECIMAL}
+  </update>
+  <update id="changecourse" parameterType="com.chinasofti.model.course.Course">
+    update T_COURSE
+    set COURSENAME = #{coursename,jdbcType=VARCHAR},
+      TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR}, 
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where COURSEID = #{courseid,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.mapper.classroom.ClassroomMapper">
+  <resultMap id="BaseResultMap" type="com.chinasofti.model.classroom.Classroom">
+    <id column="CLASSROOMID" jdbcType="DECIMAL" property="classroomid" />
+    <result column="CALSSROOMNAME" jdbcType="VARCHAR" property="calssroomname" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="CONTAIN" jdbcType="VARCHAR" property="contain" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+  </resultMap>
+  <resultMap id="MYMap" type="com.chinasofti.model.classroom.Classroom">
+    <id column="CLASSROOMID" jdbcType="DECIMAL" property="classroomid" />
+    <result column="CALSSROOMNAME" jdbcType="VARCHAR" property="calssroomname" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="CONTAIN" jdbcType="VARCHAR" property="contain" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+    <association property="areaname">
+			 <id column="A_AREAID" jdbcType="DECIMAL" property="areaid" />
+             <result column="AREANAME" jdbcType="VARCHAR" property="areaname" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    CLASSROOMID, CALSSROOMNAME, AREAID, CONTAIN, STATUS, CREATEID, CREATEDATE, EDITID, 
+    EDITDATE
+  </sql>
+   <select id="selectwhere"  resultMap="MYMap">
+   SELECT
+		T.*,
+		A.AREAID AS A_AREAID,
+		A.AREANAME
+		FROM
+		(SELECT D.* FROM T_CLASSROOM D
+		
+		) T LEFT JOIN T_AREA A ON T.AREAID = A.AREAID
+     where 
+     T.CLASSROOMID = #{classroomid,jdbcType=DECIMAL}
+  </select>
+  <select id="selectclassroom" resultMap="MYMap">
+		SELECT
+		T.*,
+		A.AREAID AS A_AREAID,
+		A.AREANAME
+		FROM
+		(SELECT D.* FROM T_CLASSROOM D
+		
+		) T LEFT JOIN T_AREA A ON T.AREAID = A.AREAID				
+	</select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_CLASSROOM
+    where CLASSROOMID = #{classroomid,jdbcType=DECIMAL}
+  </select>
+   <select id="selectclassroomthree" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_CLASSROOM
+    where AREAID = #{areaid,jdbcType=DECIMAL}
+    AND STATUS = 1
+  </select>
+  <select id="selectclassroompeo" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_CLASSROOM
+    where CLASSROOMID = #{classroomid,jdbcType=DECIMAL}
+  </select>
+  <select id="testclassroom" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from T_CLASSROOM
+    where CALSSROOMNAME = #{calssroomname,jdbcType=VARCHAR}
+    and AREAID = #{areaid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from T_CLASSROOM
+    where CLASSROOMID = #{classroomid,jdbcType=DECIMAL}
+  </delete>
+   <insert id="addclassroom" parameterType="com.chinasofti.model.classroom.Classroom" useGeneratedKeys="true" keyProperty="classroomid">
+   <selectKey keyProperty="classroomid" resultType="java.lang.Integer" order="BEFORE">
+			SELECT SEQ_MYCLASSROOM.nextval from dual
+	</selectKey>
+    insert into T_CLASSROOM (CLASSROOMID, CALSSROOMNAME, AREAID, 
+      CONTAIN, STATUS, CREATEID, 
+      CREATEDATE)
+    values (#{classroomid,jdbcType=DECIMAL}, #{calssroomname,jdbcType=VARCHAR}, #{areaid,jdbcType=VARCHAR}, 
+      #{contain,jdbcType=VARCHAR}, 1,#{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE})
+  </insert>
+  
+  <insert id="insert" parameterType="com.chinasofti.model.classroom.Classroom">
+    insert into T_CLASSROOM (CLASSROOMID, CALSSROOMNAME, AREAID, 
+      CONTAIN, STATUS, CREATEID, 
+      CREATEDATE, EDITID, EDITDATE
+      )
+    values (#{classroomid,jdbcType=DECIMAL}, #{calssroomname,jdbcType=VARCHAR}, #{areaid,jdbcType=VARCHAR}, 
+      #{contain,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createid,jdbcType=VARCHAR}, 
+      #{createdate,jdbcType=DATE}, #{editid,jdbcType=VARCHAR}, #{editdate,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.chinasofti.model.classroom.Classroom">
+    insert into T_CLASSROOM
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="classroomid != null">
+        CLASSROOMID,
+      </if>
+      <if test="calssroomname != null">
+        CALSSROOMNAME,
+      </if>
+      <if test="areaid != null">
+        AREAID,
+      </if>
+      <if test="contain != null">
+        CONTAIN,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="createid != null">
+        CREATEID,
+      </if>
+      <if test="createdate != null">
+        CREATEDATE,
+      </if>
+      <if test="editid != null">
+        EDITID,
+      </if>
+      <if test="editdate != null">
+        EDITDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="classroomid != null">
+        #{classroomid,jdbcType=DECIMAL},
+      </if>
+      <if test="calssroomname != null">
+        #{calssroomname,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null">
+        #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="contain != null">
+        #{contain,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        #{editdate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.model.classroom.Classroom">
+    update T_CLASSROOM
+    <set>
+      <if test="calssroomname != null">
+        CALSSROOMNAME = #{calssroomname,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null">
+        AREAID = #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="contain != null">
+        CONTAIN = #{contain,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        CREATEID = #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        CREATEDATE = #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        EDITID = #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        EDITDATE = #{editdate,jdbcType=DATE},
+      </if>
+    </set>
+    where CLASSROOMID = #{classroomid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chinasofti.model.classroom.Classroom">
+    update T_CLASSROOM
+    set CALSSROOMNAME = #{calssroomname,jdbcType=VARCHAR},
+      AREAID = #{areaid,jdbcType=VARCHAR},
+      CONTAIN = #{contain,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      CREATEID = #{createid,jdbcType=VARCHAR},
+      CREATEDATE = #{createdate,jdbcType=DATE},
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where CLASSROOMID = #{classroomid,jdbcType=DECIMAL}
+  </update>
+  <update id="editclassroom" parameterType="com.chinasofti.model.classroom.Classroom">
+    update T_CLASSROOM
+    set CALSSROOMNAME = #{calssroomname,jdbcType=VARCHAR},
+      AREAID = #{areaid,jdbcType=VARCHAR},
+      CONTAIN = #{contain,jdbcType=VARCHAR},    
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where CLASSROOMID = #{classroomid,jdbcType=DECIMAL}
+  </update>
+   <update id="classstatus" parameterType="com.chinasofti.model.classroom.Classroom">
+    update T_CLASSROOM
+    set 
+      STATUS = #{status,jdbcType=VARCHAR},
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where CLASSROOMID = #{classroomid,jdbcType=DECIMAL}
+  </update>
+</mapper>

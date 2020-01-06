@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.mapper.system.RoleMapper">
+	<resultMap id="BaseResultMap" type="com.chinasofti.model.system.Role">
+		<id column="ROLEID" jdbcType="DECIMAL" property="roleid" />
+		<result column="ROLE" jdbcType="VARCHAR" property="role" />
+		<result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+		<result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+		<result column="EDITID" jdbcType="VARCHAR" property="editid" />
+		<result column="EDITDATE" jdbcType="DATE" property="editdate" />
+		<result column="REMARK" jdbcType="VARCHAR" property="remark" />
+		<result column="STATUS" jdbcType="DECIMAL" property="status" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		ROLEID, ROLE, CREATEID, CREATEDATE, EDITID, EDITDATE, REMARK, STATUS
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_ROLE
+		where ROLEID = #{roleid,jdbcType=DECIMAL}
+	</select>
+	<select id="selectList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from T_ROLE
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from T_ROLE
+		where ROLEID = #{roleid,jdbcType=DECIMAL}
+	</delete>
+	<insert id="insert" parameterType="com.chinasofti.model.system.Role" useGeneratedKeys="true" keyProperty="roleid">
+		<selectKey keyProperty="roleid" resultType="java.lang.Integer" order="BEFORE">
+			SELECT seq_myrole.nextval from dual
+		</selectKey>
+		insert into T_ROLE (ROLEID, ROLE, CREATEID,
+		CREATEDATE, EDITID, EDITDATE,
+		REMARK, STATUS)
+		values (#{roleid,jdbcType=DECIMAL}, #{role,jdbcType=VARCHAR}, #{createid,jdbcType=VARCHAR},
+		#{createdate,jdbcType=DATE}, #{editid,jdbcType=VARCHAR}, #{editdate,jdbcType=DATE},
+		#{remark,jdbcType=VARCHAR}, #{status,jdbcType=DECIMAL})
+	</insert>
+	<insert id="insertSelective" parameterType="com.chinasofti.model.system.Role" useGeneratedKeys="true" keyProperty="roleid">
+		<selectKey keyProperty="roleid" resultType="java.lang.Integer" order="BEFORE">
+			SELECT seq_myrole.nextval from dual
+		</selectKey>
+		insert into T_ROLE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleid != null">
+				ROLEID,
+			</if>
+			<if test="role != null">
+				ROLE,
+			</if>
+			<if test="createid != null">
+				CREATEID,
+			</if>
+			<if test="createdate != null">
+				CREATEDATE,
+			</if>
+			<if test="editid != null">
+				EDITID,
+			</if>
+			<if test="editdate != null">
+				EDITDATE,
+			</if>
+			<if test="remark != null">
+				REMARK,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleid != null">
+				#{roleid,jdbcType=DECIMAL},
+			</if>
+			<if test="role != null">
+				#{role,jdbcType=VARCHAR},
+			</if>
+			<if test="createid != null">
+				#{createid,jdbcType=VARCHAR},
+			</if>
+			<if test="createdate != null">
+				#{createdate,jdbcType=DATE},
+			</if>
+			<if test="editid != null">
+				#{editid,jdbcType=VARCHAR},
+			</if>
+			<if test="editdate != null">
+				#{editdate,jdbcType=DATE},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.model.system.Role" useGeneratedKeys="true" keyProperty="id">
+		update T_ROLE
+		<set>
+			<if test="role != null">
+				ROLE = #{role,jdbcType=VARCHAR},
+			</if>
+			<if test="createid != null">
+				CREATEID = #{createid,jdbcType=VARCHAR},
+			</if>
+			<if test="createdate != null">
+				CREATEDATE = #{createdate,jdbcType=DATE},
+			</if>
+			<if test="editid != null">
+				EDITID = #{editid,jdbcType=VARCHAR},
+			</if>
+			<if test="editdate != null">
+				EDITDATE = #{editdate,jdbcType=DATE},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				STATUS = #{status,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where ROLEID = #{roleid,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.chinasofti.model.system.Role">
+		update T_ROLE
+		set ROLE = #{role,jdbcType=VARCHAR},
+		CREATEID = #{createid,jdbcType=VARCHAR},
+		CREATEDATE = #{createdate,jdbcType=DATE},
+		EDITID = #{editid,jdbcType=VARCHAR},
+		EDITDATE = #{editdate,jdbcType=DATE},
+		REMARK = #{remark,jdbcType=VARCHAR},
+		STATUS = #{status,jdbcType=DECIMAL}
+		where ROLEID = #{roleid,jdbcType=DECIMAL}
+	</update>
+</mapper>

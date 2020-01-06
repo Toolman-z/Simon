@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.mapper.region.DepartmentMapper">
+  <resultMap id="BaseResultMap" type="com.chinasofti.model.region.Department">
+    <id column="DEPTID" jdbcType="VARCHAR" property="deptid" />
+    <result column="DEPTNAME" jdbcType="VARCHAR" property="deptname" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDIRTDATE" jdbcType="DATE" property="edirtdate" />   
+  </resultMap>
+   <resultMap id="MyMap" type="com.chinasofti.model.region.Department">
+    <id column="DEPTID" jdbcType="VARCHAR" property="deptid" />
+    <result column="DEPTNAME" jdbcType="VARCHAR" property="deptname" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDIRTDATE" jdbcType="DATE" property="edirtdate" />
+    <association property="areaname">
+			 <id column="A_AREAID" jdbcType="DECIMAL" property="areaid" />
+             <result column="AREANAME" jdbcType="VARCHAR" property="areaname" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    DEPTID, DEPTNAME, AREAID, CREATEID, CREATEDATE, EDITID, EDIRTDATE
+  </sql>
+  <sql id="where">
+		<where>
+			<if test="deptid != null and deptid != '' ">D.DEPTID like'%'||#{deptid}||'%'  </if>
+		</where>
+	</sql>
+	<select id="selectDept" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from T_DEPT 		
+	</select>
+	<select id="childone" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from T_DEPT 
+		where AREAID = #{areaid,jdbcType=VARCHAR}
+	</select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_DEPT
+    where DEPTID = #{deptid,jdbcType=VARCHAR}
+  </select>
+  <select id="departmentList" resultMap="MyMap">
+		SELECT
+		T.*,
+		A.AREAID AS A_AREAID,
+		A.AREANAME
+		FROM
+		( SELECT ROWNUM AS NUM, U.* FROM T_DEPT U ) T  LEFT JOIN T_AREA A ON T.AREAID = A.AREAID
+		WHERE T.NUM > (#{page}-1)*#{row} and T.NUM &lt;= #{page}*#{row}				
+	</select>
+	<select id="selectCount" parameterType="com.chinasofti.model.region.Department" resultType="java.lang.Integer" >
+		SELECT count(*) FROM  T_DEPT 	
+	</select>
+	<select id="testdeptname" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select *
+		from T_DEPT 
+		where DEPTNAME = #{deptname,jdbcType=VARCHAR}
+		and AREAID = #{areaid,jdbcType=VARCHAR}
+	</select>
+	<select id="selectDeptname" parameterType="java.lang.String" resultMap="MyMap">
+		SELECT
+		T.*,
+		A.AREAID AS A_AREAID,
+		A.AREANAME
+		FROM
+		(SELECT D.* FROM T_DEPT D
+		
+		) T LEFT JOIN T_AREA A ON T.AREAID = A.AREAID
+		where T.DEPTNAME = #{deptname,jdbcType=VARCHAR}
+		and A.AREAID = #{areaid,jdbcType=VARCHAR}
+	</select>
+	<insert id="adddept" parameterType="com.chinasofti.model.region.Department" useGeneratedKeys="true" keyProperty="deptid">
+	<selectKey keyProperty="deptid" resultType="String" order="BEFORE">
+			SELECT SEQ_MYSEQ.nextval from dual
+		</selectKey>
+    insert into T_DEPT (DEPTID,DEPTNAME, AREAID,CREATEID, CREATEDATE)
+    values (#{deptid,jdbcType=DECIMAL}, #{deptname,jdbcType=VARCHAR}, #{areaid,jdbcType=VARCHAR},#{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE})
+  </insert>
+   <update id="editdept" parameterType="com.chinasofti.model.region.Department">
+    update T_DEPT
+    set DEPTNAME = #{deptname,jdbcType=VARCHAR},
+      AREAID = #{areaid,jdbcType=VARCHAR},
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDIRTDATE = #{edirtdate,jdbcType=DATE}
+    where DEPTID = #{deptid,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from T_DEPT
+    where DEPTID = #{deptid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.chinasofti.model.region.Department">
+    insert into T_DEPT (DEPTID, DEPTNAME, AREAID, 
+      CREATEID, CREATEDATE, EDITID, 
+      EDIRTDATE)
+    values (#{deptid,jdbcType=VARCHAR}, #{deptname,jdbcType=VARCHAR}, #{areaid,jdbcType=VARCHAR}, 
+      #{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE}, #{editid,jdbcType=VARCHAR}, 
+      #{edirtdate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chinasofti.model.region.Department">
+    insert into T_DEPT
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deptid != null">
+        DEPTID,
+      </if>
+      <if test="deptname != null">
+        DEPTNAME,
+      </if>
+      <if test="areaid != null">
+        AREAID,
+      </if>
+      <if test="createid != null">
+        CREATEID,
+      </if>
+      <if test="createdate != null">
+        CREATEDATE,
+      </if>
+      <if test="editid != null">
+        EDITID,
+      </if>
+      <if test="edirtdate != null">
+        EDIRTDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deptid != null">
+        #{deptid,jdbcType=VARCHAR},
+      </if>
+      <if test="deptname != null">
+        #{deptname,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null">
+        #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="edirtdate != null">
+        #{edirtdate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.model.region.Department">
+    update T_DEPT
+    <set>
+      <if test="deptname != null">
+        DEPTNAME = #{deptname,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null">
+        AREAID = #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        CREATEID = #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        CREATEDATE = #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        EDITID = #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="edirtdate != null">
+        EDIRTDATE = #{edirtdate,jdbcType=DATE},
+      </if>
+    </set>
+    where DEPTID = #{deptid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chinasofti.model.region.Department">
+    update T_DEPT
+    set DEPTNAME = #{deptname,jdbcType=VARCHAR},
+      AREAID = #{areaid,jdbcType=VARCHAR},
+      CREATEID = #{createid,jdbcType=VARCHAR},
+      CREATEDATE = #{createdate,jdbcType=DATE},
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDIRTDATE = #{edirtdate,jdbcType=DATE}
+    where DEPTID = #{deptid,jdbcType=VARCHAR}
+  </update>
+</mapper>

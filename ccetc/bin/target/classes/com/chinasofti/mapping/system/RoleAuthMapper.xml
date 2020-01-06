@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.mapper.system.RoleAuthMapper">
+	<resultMap id="BaseResultMap" type="com.chinasofti.model.system.RoleAuth">
+		<result column="ROLEID" jdbcType="DECIMAL" property="roleid" />
+		<result column="AUTHID" jdbcType="VARCHAR" property="authid" />
+	</resultMap>
+	<select id="authIdList" resultType="java.lang.String">
+		SELECT AUTHID
+		FROM T_ROLEAUTH
+		WHERE ROLEID = #{roleId}
+	</select>
+	<select id="urlList" resultType="java.lang.String">
+		SELECT
+		A.URL
+		FROM
+		T_ROLEAUTH R
+		LEFT JOIN T_AUTH A ON R. AUTHID = A . AUTHID
+		WHERE R.ROLEID = 1 AND A.PAUTHID != '#'
+	</select>
+	<insert id="insert" parameterType="com.chinasofti.model.system.RoleAuth">
+		insert into T_ROLEAUTH (ROLEID, AUTHID)
+		values (#{roleid,jdbcType=DECIMAL}, #{authid,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.chinasofti.model.system.RoleAuth">
+		insert into T_ROLEAUTH
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="roleid != null">
+				ROLEID,
+			</if>
+			<if test="authid != null">
+				AUTHID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="roleid != null">
+				#{roleid,jdbcType=DECIMAL},
+			</if>
+			<if test="authid != null">
+				#{authid,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>

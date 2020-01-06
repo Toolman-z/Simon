@@ -1,0 +1,11 @@
+package com.chinasofti.service.system;
+
+import java.util.List;
+
+import com.chinasofti.model.system.Auth;
+
+public interface AuthService {
+	
+	List<Auth> menuList();
+
+}

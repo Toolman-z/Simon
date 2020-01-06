@@ -1,0 +1,64 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户权限管理</title>
+<jsp:include page="../inc.jsp"></jsp:include>
+<script type="text/javascript">
+function query(){
+	var userid = $("#userid").val();
+	var row = $(".pagination-page-list").val();//每页显示多少条
+	var page = $(".pagination-num").val();//当前是第几页
+	window.location.href="${pageContext.request.contextPath}/user/userRole.action?userid=" + userid +"&row=" + row + "&page=" + page;
+}
+
+$(function(){
+	$("#dg").datagrid("getPager").pagination({
+	    total: '${total}',
+	    pageSize: 10,
+	    pageList: [10,20,30],
+	    onSelectPage: function(pageNumber, pageSize) {
+	    	query();
+	    }
+	});
+});
+
+</script>
+</head>
+<body class="easyui-layout">
+	<div data-options="region:'north',title:'条件检索'  " style="height: 68px;">
+		<div style="float: left; margin-top: 5px; margin-left: 10px;">
+			员工账号:<input id="userid" class="easyui-textbox" style="width: 150px"> <a onclick="query()" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+		</div>
+		<div style="float: right; margin-top: 5px; margin-right: 10px;">
+			<a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改</a> <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">禁用</a> <a id="btn" href="#"
+				class="easyui-linkbutton" data-options="iconCls:'icon-ok'">启用</a> <a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-reload'">重回密码</a>
+		</div>
+	</div>
+	<div data-options="region:'center',title:'数据列表'" style="padding: 5px;">
+		<table id="dg" class="easyui-datagrid" data-options="fitColumns:true,pagination:true,pagePosition:'bottom',fit:true">
+			<thead>
+				<tr>
+					<th data-options="field:'username'">名称</th>
+					<th data-options="field:'userid'">账号</th>
+					<th data-options="field:'roleid'">角色</th>
+					<th data-options="field:'status'">状态</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${userList}" var="user">
+					<tr>
+						<td>${user.username}</td>
+						<td>${user.userid}</td>
+						<td>${user.roleid}</td>
+						<td>${user.status}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+
+	</div>
+</body>
+</html>

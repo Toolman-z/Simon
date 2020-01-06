@@ -1,0 +1,23 @@
+package com.chinasofti.service.system.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.chinasofti.mapper.system.AuthMapper;
+import com.chinasofti.model.system.Auth;
+import com.chinasofti.service.system.AuthService;
+
+@Service
+public class AuthServiceImpl implements AuthService {
+	
+	@Autowired
+	private AuthMapper authMapper;
+
+	@Override
+	public List<Auth> menuList() {
+		return authMapper.menuList();
+	}
+
+}

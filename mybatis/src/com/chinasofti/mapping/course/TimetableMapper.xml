@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.mapper.course.TimetableMapper">
+  <resultMap id="BaseResultMap" type="com.chinasofti.model.course.Timetable">
+    <id column="TIMETABLEID" jdbcType="DECIMAL" property="timetableid" />
+    <result column="CLAZZID" jdbcType="DECIMAL" property="clazzid" />
+    <result column="DAYSUM" jdbcType="DECIMAL" property="daysum" />
+    <result column="CONTENT" jdbcType="VARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    TIMETABLEID, CLAZZID, DAYSUM, CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_TIMETABLE
+    where TIMETABLEID = #{timetableid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from T_TIMETABLE
+    where TIMETABLEID = #{timetableid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.chinasofti.model.course.Timetable">
+    insert into T_TIMETABLE (TIMETABLEID, CLAZZID, DAYSUM, 
+      CONTENT)
+    values (#{timetableid,jdbcType=DECIMAL}, #{clazzid,jdbcType=DECIMAL}, #{daysum,jdbcType=DECIMAL}, 
+      #{content,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chinasofti.model.course.Timetable">
+    insert into T_TIMETABLE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="timetableid != null">
+        TIMETABLEID,
+      </if>
+      <if test="clazzid != null">
+        CLAZZID,
+      </if>
+      <if test="daysum != null">
+        DAYSUM,
+      </if>
+      <if test="content != null">
+        CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="timetableid != null">
+        #{timetableid,jdbcType=DECIMAL},
+      </if>
+      <if test="clazzid != null">
+        #{clazzid,jdbcType=DECIMAL},
+      </if>
+      <if test="daysum != null">
+        #{daysum,jdbcType=DECIMAL},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.model.course.Timetable">
+    update T_TIMETABLE
+    <set>
+      <if test="clazzid != null">
+        CLAZZID = #{clazzid,jdbcType=DECIMAL},
+      </if>
+      <if test="daysum != null">
+        DAYSUM = #{daysum,jdbcType=DECIMAL},
+      </if>
+      <if test="content != null">
+        CONTENT = #{content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TIMETABLEID = #{timetableid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chinasofti.model.course.Timetable">
+    update T_TIMETABLE
+    set CLAZZID = #{clazzid,jdbcType=DECIMAL},
+      DAYSUM = #{daysum,jdbcType=DECIMAL},
+      CONTENT = #{content,jdbcType=VARCHAR}
+    where TIMETABLEID = #{timetableid,jdbcType=DECIMAL}
+  </update>
+</mapper>

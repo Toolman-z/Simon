@@ -1,0 +1,75 @@
+package com.chinasofti.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.chinasofti.model.system.Auth;
+import com.chinasofti.model.user.User;
+import com.chinasofti.service.system.AuthService;
+import com.chinasofti.service.system.RoleAuthService;
+
+@Controller
+public class IndexController {
+
+	@Autowired
+	private AuthService authService;
+
+	@Autowired
+	private RoleAuthService roleAuthService;
+
+	@RequestMapping("/noAuth.action")
+	public String noAuth() {
+		return "error/noAuth";
+	}
+
+	@RequestMapping("/index.action")
+	public String index(Model model, HttpSession session) {
+		Object obj = session.getAttribute("user");
+		if (obj == null) {
+			return "login";
+		}
+		User user = (User) obj;
+		List<Auth> menuList = authService.menuList();
+		if (!user.getUserid().equals("admin")) {
+			List<String> authIdList = roleAuthService.authIdList(user.getRoleid());
+			List<String> urlList = roleAuthService.urlList(user.getRoleid());
+			model.addAttribute("menuList", menuList(menuList, authIdList));
+			session.setAttribute("auths", urlList);
+		} else {
+			model.addAttribute("menuList", menuList);
+		}
+		return "index";
+	}
+
+	@RequestMapping("/login.action")
+	public String login() {
+		return "login";
+	}
+
+	@RequestMapping("/logout.action")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "login";
+	}
+
+	private List<Auth> menuList(List<Auth> menuList, List<String> authIdList) {
+		List<Auth> list = new ArrayList<Auth>();
+		for (Auth auth : menuList) {
+			if (authIdList.contains(auth.getAuthid())) {
+				if (auth.getChildren() != null) {
+					auth.setChildren(menuList(auth.getChildren(), authIdList));
+				}
+				list.add(auth);
+			}
+		}
+		return list;
+	}
+
+}

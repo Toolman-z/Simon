@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bookstore>
+	<book category="COOKING">
+		<tittle lang="en">Everyday Italian</tittle>
+		<author>Gad D </author>
+		<year>2005</year>
+		<price>300.0</price>
+	</book>
+</bookstore>
+<bookstore>
+	<book category="COOKING">
+		<tittle lang="en">Everyday Italian</tittle>
+		<author>Gad D </author>
+		<year>2005</year>
+		<price>300.0</price>
+	</book>
+</bookstore>
+<bookstore>
+	<book category="COOKING">
+		<tittle lang="en">Everyday Italian</tittle>
+		<author>Gad D </author>
+		<year>2005</year>
+		<price>300.0</price>
+	</book>
+</bookstore>

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.mapper.region.TechMapper">
+  <resultMap id="BaseResultMap" type="com.chinasofti.model.region.Tech">
+    <id column="TECHNOLOGYID" jdbcType="VARCHAR" property="technologyid" />
+    <result column="TECHNOLOGYNAME" jdbcType="VARCHAR" property="technologyname" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+  </resultMap>
+  <resultMap id="MYMap" type="com.chinasofti.model.region.Tech">
+    <id column="TECHNOLOGYID" jdbcType="VARCHAR" property="technologyid" />
+    <result column="TECHNOLOGYNAME" jdbcType="VARCHAR" property="technologyname" />
+    <result column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+     <association property="areaname">
+			 <id column="A_AREAID" jdbcType="DECIMAL" property="areaid" />
+             <result column="AREANAME" jdbcType="VARCHAR" property="areaname" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    TECHNOLOGYID, TECHNOLOGYNAME, AREAID, CREATEID, CREATEDATE, EDITID, EDITDATE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_TECHNOLOGY
+    where TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR}
+  </select>
+  <select id="selecttech" parameterType="java.lang.String" resultMap="MYMap">
+   SELECT
+		T.*,
+		A.AREAID AS A_AREAID,		
+		A.AREANAME
+		FROM
+		(SELECT D.* FROM T_TECHNOLOGY D		
+		) T LEFT JOIN T_AREA A ON T.AREAID = A.AREAID
+		
+  </select>
+  <select id="childthree" parameterType="java.lang.String" resultMap="BaseResultMap">
+   SELECT * FROM T_TECHNOLOGY 	
+   where AREAID = #{areaid,jdbcType=VARCHAR}
+		
+  </select>
+  
+   <select id="testtech" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from T_TECHNOLOGY
+    where AREAID = #{areaid,jdbcType=VARCHAR}
+    and
+    TECHNOLOGYNAME = #{technologyname,jdbcType=VARCHAR}
+  </select>
+  <select id="testtechedit" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from T_TECHNOLOGY
+    where AREAID = #{areaid,jdbcType=VARCHAR}
+    and
+    TECHNOLOGYNAME = #{technologyname,jdbcType=VARCHAR}
+  </select>
+   <select id="findalltech" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from T_TECHNOLOGY
+  </select>
+   <select id="selectone"  resultMap="MYMap">
+   SELECT
+		T.*,
+		A.AREAID AS A_AREAID,		
+		A.AREANAME
+		FROM
+		(SELECT D.* FROM T_TECHNOLOGY D		
+		) T LEFT JOIN T_AREA A ON T.AREAID = A.AREAID
+     where T.TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from T_TECHNOLOGY
+    where TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.chinasofti.model.region.Tech">
+    insert into T_TECHNOLOGY (TECHNOLOGYNAME, AREAID, 
+      EDITID, 
+      EDITDATE)
+    values (#{technologyname,jdbcType=VARCHAR}, #{areaid,jdbcType=VARCHAR}, 
+      #{editid,jdbcType=VARCHAR}, 
+      #{editdate,jdbcType=DATE})
+      where TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR}
+  </insert>
+ 
+   <update id="techaedit" parameterType="com.chinasofti.model.region.Tech">
+    update T_TECHNOLOGY
+    set TECHNOLOGYNAME = #{technologyname,jdbcType=VARCHAR},
+      AREAID = #{areaid,jdbcType=VARCHAR},    
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR}
+  </update>
+  <insert id="techadd" parameterType="com.chinasofti.model.region.Tech" useGeneratedKeys="true" keyProperty="technologyid">
+  <selectKey keyProperty="technologyid" resultType="String" order="BEFORE">
+			SELECT SEQ_MYTECH.nextval from dual
+		</selectKey>
+    insert into T_TECHNOLOGY (TECHNOLOGYID, TECHNOLOGYNAME, AREAID, 
+      CREATEID, CREATEDATE)
+    values (#{technologyid,jdbcType=VARCHAR}, #{technologyname,jdbcType=VARCHAR}, #{areaid,jdbcType=VARCHAR}, 
+      #{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chinasofti.model.region.Tech">
+    insert into T_TECHNOLOGY
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="technologyid != null">
+        TECHNOLOGYID,
+      </if>
+      <if test="technologyname != null">
+        TECHNOLOGYNAME,
+      </if>
+      <if test="areaid != null">
+        AREAID,
+      </if>
+      <if test="createid != null">
+        CREATEID,
+      </if>
+      <if test="createdate != null">
+        CREATEDATE,
+      </if>
+      <if test="editid != null">
+        EDITID,
+      </if>
+      <if test="editdate != null">
+        EDITDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="technologyid != null">
+        #{technologyid,jdbcType=VARCHAR},
+      </if>
+      <if test="technologyname != null">
+        #{technologyname,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null">
+        #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        #{editdate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.model.region.Tech">
+    update T_TECHNOLOGY
+    <set>
+      <if test="technologyname != null">
+        TECHNOLOGYNAME = #{technologyname,jdbcType=VARCHAR},
+      </if>
+      <if test="areaid != null">
+        AREAID = #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        CREATEID = #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        CREATEDATE = #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        EDITID = #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        EDITDATE = #{editdate,jdbcType=DATE},
+      </if>
+    </set>
+    where TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chinasofti.model.region.Tech">
+    update T_TECHNOLOGY
+    set TECHNOLOGYNAME = #{technologyname,jdbcType=VARCHAR},
+      AREAID = #{areaid,jdbcType=VARCHAR},
+      CREATEID = #{createid,jdbcType=VARCHAR},
+      CREATEDATE = #{createdate,jdbcType=DATE},
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where TECHNOLOGYID = #{technologyid,jdbcType=VARCHAR}
+  </update>
+</mapper>

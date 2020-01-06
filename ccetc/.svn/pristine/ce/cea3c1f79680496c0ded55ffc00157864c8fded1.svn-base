@@ -1,0 +1,9 @@
+package com.chinasofti.service.user;
+
+import com.chinasofti.model.user.User;
+
+public interface UserService {
+
+	User login(User user);
+
+}

@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinasofti.mapper.region.RegionMapper">
+  <resultMap id="BaseResultMap" type="com.chinasofti.model.region.Region">
+    <id column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="AREANAME" jdbcType="VARCHAR" property="areaname" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+  </resultMap>
+  <resultMap id="MyMap" type="com.chinasofti.model.region.Region">
+    <id column="AREAID" jdbcType="VARCHAR" property="areaid" />
+    <result column="AREANAME" jdbcType="VARCHAR" property="areaname" />
+    <result column="CREATEID" jdbcType="VARCHAR" property="createid" />
+    <result column="CREATEDATE" jdbcType="DATE" property="createdate" />
+    <result column="EDITID" jdbcType="VARCHAR" property="editid" />
+    <result column="EDITDATE" jdbcType="DATE" property="editdate" />
+     <association property="deptname">
+			 <id column="P_DEPTID" jdbcType="DECIMAL" property="deptid" />
+             <result column="DEPTNAME" jdbcType="VARCHAR" property="deptname" />
+    </association>
+     <association property="dutiesname">
+			 <id column="U_DUTIESID" jdbcType="DECIMAL" property="dutiesid" />
+              <result column="DUTIESNAME" jdbcType="VARCHAR" property="dutiesname" />
+    </association>
+    <association property="technologyname">
+			 <id column="X_TECHNOLOGYID" jdbcType="DECIMAL" property="technologyid" />
+             <result column="TECHNOLOGYNAME" jdbcType="VARCHAR" property="technologyname" />
+    </association>
+    <association property="username">
+			 <id column="C_USERID" jdbcType="DECIMAL" property="userid" />
+           <result column="USERNAME" jdbcType="VARCHAR" property="username" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    AREAID, AREANAME, CREATEID, CREATEDATE, EDITID, EDITDATE
+  </sql>
+  <select id="deltfive" parameterType="java.lang.String" resultMap="MyMap">
+		SELECT
+  T .*,
+	X.*,
+	C.*,
+  U.*,
+	P.*
+FROM
+	(SELECT D .* FROM T_AREA D) T
+LEFT JOIN (select wm_concat(w.DEPTNAME) as deptname,w.areaid from T_DEPT w  group by w.areaid) P ON P .AREAID = T .AREAID
+LEFT JOIN (select wm_concat(z.DUTIESNAME) as dutiesname,z.areaid from T_DUTIES z  group by z.areaid)U ON U .AREAID = T .AREAID
+LEFT JOIN (select wm_concat(t.TECHNOLOGYNAME) as technologyname,t.areaid from T_TECHNOLOGY t  group by t.areaid) X ON X.AREAID = T .AREAID
+LEFT JOIN (select wm_concat(y.USERNAME) as username,y.areaid from T_USER y  group by y.areaid) C ON C.AREAID = T .AREAID
+		WHERE T.AREAID = #{areaid,jdbcType=VARCHAR}			
+	</select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_AREA
+    where AREAID = #{areaid,jdbcType=VARCHAR}
+  </select>
+  <select id="areaList" resultMap="BaseResultMap">
+		SELECT * from ( SELECT
+    ROWNUM AS NUM, U.* FROM T_AREA U ) T 
+		WHERE T.NUM > (#{page}-1)*#{row} and T.NUM &lt;= #{page}*#{row}		
+	</select>
+	<select id="allareaList" resultMap="BaseResultMap">
+		SELECT * from T_AREA 
+		
+	</select>
+	<select id="selectCount" parameterType="com.chinasofti.model.region.Region" resultType="java.lang.Integer" >
+		SELECT count(*) FROM  T_AREA 	
+	</select>
+	<select id="testareaname" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select *
+		from T_AREA 
+		where AREANAME = #{areaname,jdbcType=VARCHAR}	
+	</select>
+	<select id="selectAreaname" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select *		
+		from T_AREA
+		where AREAID = #{areaid,jdbcType=VARCHAR}
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from T_AREA
+    where AREAID = #{areaid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="addarea" parameterType="com.chinasofti.model.region.Region" useGeneratedKeys="true" keyProperty="areaid">
+	<selectKey keyProperty="areaid" resultType="String" order="BEFORE">
+			SELECT SEQ_MYAREA.nextval from dual
+		</selectKey>
+    insert into T_AREA (AREAID,AREANAME, CREATEID, CREATEDATE)
+    values (#{areaid,jdbcType=DECIMAL}, #{areaname,jdbcType=VARCHAR}, #{createid,jdbcType=VARCHAR}, #{createdate,jdbcType=DATE})
+  </insert>
+  <insert id="insert" parameterType="com.chinasofti.model.region.Region">
+    insert into T_AREA (AREAID, AREANAME, CREATEID, 
+      CREATEDATE, EDITID, EDITDATE
+      )
+    values (#{areaid,jdbcType=VARCHAR}, #{areaname,jdbcType=VARCHAR}, #{createid,jdbcType=VARCHAR}, 
+      #{createdate,jdbcType=DATE}, #{editid,jdbcType=VARCHAR}, #{editdate,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.chinasofti.model.region.Region">
+    insert into T_AREA
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="areaid != null">
+        AREAID,
+      </if>
+      <if test="areaname != null">
+        AREANAME,
+      </if>
+      <if test="createid != null">
+        CREATEID,
+      </if>
+      <if test="createdate != null">
+        CREATEDATE,
+      </if>
+      <if test="editid != null">
+        EDITID,
+      </if>
+      <if test="editdate != null">
+        EDITDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="areaid != null">
+        #{areaid,jdbcType=VARCHAR},
+      </if>
+      <if test="areaname != null">
+        #{areaname,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        #{editdate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chinasofti.model.region.Region">
+    update T_AREA
+    <set>
+      <if test="areaname != null">
+        AREANAME = #{areaname,jdbcType=VARCHAR},
+      </if>
+      <if test="createid != null">
+        CREATEID = #{createid,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        CREATEDATE = #{createdate,jdbcType=DATE},
+      </if>
+      <if test="editid != null">
+        EDITID = #{editid,jdbcType=VARCHAR},
+      </if>
+      <if test="editdate != null">
+        EDITDATE = #{editdate,jdbcType=DATE},
+      </if>
+    </set>
+    where AREAID = #{areaid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chinasofti.model.region.Region">
+    update T_AREA
+    set AREANAME = #{areaname,jdbcType=VARCHAR},
+      CREATEID = #{createid,jdbcType=VARCHAR},
+      CREATEDATE = #{createdate,jdbcType=DATE},
+      EDITID = #{editid,jdbcType=VARCHAR},
+      EDITDATE = #{editdate,jdbcType=DATE}
+    where AREAID = #{areaid,jdbcType=VARCHAR}
+  </update>
+  <update id="editarea" parameterType="com.chinasofti.model.region.Region">
+		update T_AREA
+		set AREANAME = #{areaname,jdbcType=VARCHAR},		
+		EDITID = #{editid,jdbcType=VARCHAR},
+		EDITDATE = #{editdate,jdbcType=DATE}
+		where AREAID = #{areaid,jdbcType=VARCHAR}
+	</update>
+</mapper>
